@@ -1,6 +1,8 @@
 import React from 'react';
-import axios from 'axios';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { Provider } from 'react-redux';
+import { StyleSheet, View } from 'react-native';
+
+import store from './src/store';
 
 import * as firebase from 'firebase';
 
@@ -16,97 +18,46 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-// async function loginWithGoogle() {
-//   const { type, token } = await Expo.Google.logInAsync({
-//     androidClientId: '552161870836-veobnags5gb12orlht04s84s5hvn9put.apps.googleusercontent.com',
-//     iosClientId: '552161870836-5ua971a4hmtjhj49qahk7lc44qfg5rid.apps.googleusercontent.com',
-//     scopes: ['profile', 'email'],
-//   });
+import Router from './src/Router';
+class App extends React.Component {
 
-//   console.log(type, token, 'REZ')
 
-//   if (type === 'success') {
-//     // Build Firebase credential with the Google access token.
-//     const credential = firebase.auth.GoogleAuthProvider.credential(token);
+  // _handlePress = () => {
+  //   console.log(this.props.navigation, 'nav')
+  //   this.props.navigation.navigate('Home');
+  // }
 
-//     // Sign in with credential from the Google user.
-//     firebase.auth().signInWithCredential(credential).catch((error) => {
-//       // Handle Errors here.
-//       console.log(error, 'error');
-//     });
-//   }
-// }
-
-import Location from './src/Location';
-export default class App extends React.Component {
-  state = { loggedIn: null };
-
-  componentDidMount() {
-    // axios.get(
-    //   'http://af208768.ngrok.io')
-    //   .then(res => console.log(res.data, 'res'))
-    //   .catch(err => {
-    //     console.log(err);
-    //   })
-
-    firebase.auth().onAuthStateChanged((user) => {
-      console.log(user, 'user')
-      if (user) {
-        this.setState({ loggedIn: true });
-      } else {
-        this.setState({ loggedIn: false });
-      }
-    });
-  }
-
-  async loginWithGoogle() {
-    const { type, idToken } = await Expo.Google.logInAsync({
-      androidClientId: '665105818131-mth049uaf78vdforfma5immdcb174psf.apps.googleusercontent.com',
-      iosClientId: '665105818131-mj94uos302jrhad6udlgk164hbhacjtf.apps.googleusercontent.com',
-      scopes: ['profile', 'email'],
-    });
-
-    if (type === 'success') {
-      // Build Firebase credential with the Google access idToken.
-      const credential = firebase.auth.GoogleAuthProvider.credential(idToken);
-
-      // Sign in with credential from the Google user.
-      firebase.auth().signInWithCredential(credential)
-        .catch((error) => {
-          // Handle Errors here.
-          console.log(error, 'error');
-        });
-    }
-  }
-
-  renderContent() {
-    switch (this.state.loggedIn) {
-      case true:
-        return (
-          <Button
-            onPress={() => firebase.auth().signOut()
-            }
-            title="Log Out"
-          />
-        );
-      case false:
-        return (
-          <Button
-            onPress={() => this.loginWithGoogle()}
-            title="Log In"
-          />
-        );
-      default:
-        return <Text>Loading...</Text>;
-    }
-  }
+  // renderContent() {
+  //   switch (this.props.user) {
+  //     case typeof user == 'object':
+  //       return (
+  //         <View>
+  //           <Button title="Go home" onPress={this._handlePress} />
+  //           <Button
+  //             onPress={() => firebase.auth().signOut()}
+  //             title="Log Out"
+  //           />
+  //         </View>
+  //       );
+  //     case false:
+  //       return (
+  //         <Button
+  //           onPress={() => this.loginWithGoogle()}
+  //           title="Log In"
+  //         />
+  //       );
+  //     default:
+  //       return <Text>Loading...</Text>;
+  //   }
+  // }
 
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Mah app</Text>
-        {this.renderContent()}
-      </View>
+      <Provider store={store}>
+        <View style={styles.container}>
+          <Router />
+        </View>
+      </Provider>
     );
   }
 }
@@ -119,3 +70,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+export default App
