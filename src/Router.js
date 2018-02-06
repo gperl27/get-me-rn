@@ -6,9 +6,36 @@ import * as firebase from 'firebase'
 import { StyleSheet, Text, View, Button } from 'react-native';
 
 import {
+    StackNavigator,
+} from 'react-navigation';
+
+import HomeScreen from './Home';
+import DetailsScreen from './Details';
+import LoginScreen from './Login';
+
+import {
     loggedIn,
     loggedOut,
 } from './modules/auth';
+
+const AuthStack = StackNavigator(
+    {
+        Home: {
+            screen: HomeScreen,
+        },
+        Details: {
+            screen: DetailsScreen,
+        },
+    }
+);
+
+const LoginStack = StackNavigator(
+    {
+        Login: {
+            screen: LoginScreen,
+        },
+    }
+)
 
 class Router extends React.Component {
     componentDidMount() {
@@ -72,23 +99,32 @@ class Router extends React.Component {
     render() {
         return (
             <View>
-                <Text>routerl</Text>
-                <Button
-                    onPress={() => this.loginWithGoogle()}
-                    title="Log In"
-                />
+                {this.props.user ? <AuthStack /> : <LoginStack />}
                 <Button
                     onPress={() => firebase.auth().signOut()}
                     title="Log Out"
                 />
-                <Button
-                    onPress={() => this.sendReq()}
-                    title="Test api"
-                />
             </View>
+            // <View>
+            //     <Text>routerl</Text>
+            //     <Button
+            //         onPress={() => this.loginWithGoogle()}
+            //         title="Log In"
+            //     />
+            //     <Button
+            //         onPress={() => this.sendReq()}
+            //         title="Test api"
+            //     />
+            // </View>
         );
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+      backgroundColor: '#333333',
+    },
+  });
 
 const mapStateToProps = state => ({
     user: state.auth.user
