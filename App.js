@@ -1,9 +1,7 @@
 import React from 'react';
+import { Font, AppLoading } from "expo";
 import { Provider } from 'react-redux';
-import { StyleSheet, View } from 'react-native';
-
 import store from './src/store';
-
 import * as firebase from 'firebase';
 
 // Initialize Firebase
@@ -18,9 +16,21 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-import Router from './src/Router';
-class App extends React.Component {
+import HomeScreenRouter from './src/screens/Home';
 
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { loading: true };
+  }
+
+  async componentWillMount() {
+    await Font.loadAsync({
+      Roboto: require("native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+    });
+    this.setState({ loading: false });
+  }
 
   // _handlePress = () => {
   //   console.log(this.props.navigation, 'nav')
@@ -53,22 +63,15 @@ class App extends React.Component {
 
   render() {
     return (
-      <Provider store={store}>
-        <View style={styles.container}>
-          <Router />
-        </View>
-      </Provider>
+      this.state.loading ?
+        <AppLoading />
+        :
+        <Provider store={store}>
+          <HomeScreenRouter />
+        </Provider>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 export default App
