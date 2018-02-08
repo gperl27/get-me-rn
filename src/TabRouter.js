@@ -16,17 +16,35 @@ import {
     Right,
     Footer,
     FooterTab,
+    List,
+    ListItem,
 } from "native-base";
 import { TabNavigator } from "react-navigation";
 
 class HomeScreen extends React.Component {
     render() {
+        let items = [];
+
+        for (let i = 0; i < 50; i++) {
+            items.push(i);
+        }
+
         return (
             <Container>
                 <Content>
-                    <Text>
-                        home baby
-                        </Text>
+                    <List dataArray={items}
+                        renderRow={(item) =>
+                            <ListItem>
+                                <CardItem>
+                                    <Body>
+                                        <Text>
+                                        //Your text here
+                                        </Text>
+                                    </Body>
+                                </CardItem>
+                            </ListItem>
+                        }>
+                    </List>
                 </Content>
             </Container>
         );

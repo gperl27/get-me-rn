@@ -15,6 +15,8 @@ import {
     Right,
     Footer,
     FooterTab,
+    Fab,
+    View,
 } from "native-base";
 
 import TabRouter from '../../TabRouter'
@@ -25,6 +27,14 @@ class HomeScreen extends React.Component {
         return (
             <Container>
                 <Header />
+                <Fab
+                    direction="up"
+                    style={{ zIndex: 99999, backgroundColor: '#5067FF' }}
+                    position="bottomRight"
+                    onPress={() => console.log('hit fab')}
+                >
+                    <Icon name="add" />
+                </Fab>
                 <TabRouter />
             </Container>
         );
