@@ -40,7 +40,6 @@ class AuthedRouter extends Component {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         user.getIdToken(true).then(function (idToken) {
-          console.log(idToken, 'asdfasd')
           axios.defaults.headers.common['Authorization'] = idToken;
           axios.get(
             'http://d2c234c5.ngrok.io/auth_user', { params: { user } })

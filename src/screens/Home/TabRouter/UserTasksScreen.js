@@ -31,7 +31,7 @@ class UserTasksScreen extends React.Component {
 
     render() {
         const { tasks, isLoading } = this.props;
-
+        console.log(tasks,'tasks');
         return (
             isLoading ?
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -39,9 +39,19 @@ class UserTasksScreen extends React.Component {
                 </View>
                 :
                 tasks.length > 0 ?
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                        <Text>tasks be here!</Text>
-                    </View>
+                    <List dataArray={this.props.tasks}
+                        renderRow={(task) =>
+                            <ListItem>
+                                <CardItem>
+                                    <Body>
+                                        <Text>
+                                            {task.title}
+                                        </Text>
+                                    </Body>
+                                </CardItem>
+                            </ListItem>
+                        }>
+                    </List>
                     :
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <Text>no tasks yet!!</Text>

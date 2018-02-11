@@ -65,7 +65,7 @@ class SettingsScreen extends React.Component {
 
 const TabRouter = TabNavigator(
     {
-        UserTasksScreen: { screen: UserTasksScreen },
+        UserTasks: { screen: UserTasksScreen },
         Settings: { screen: SettingsScreen },
     },
     {
@@ -77,7 +77,7 @@ const TabRouter = TabNavigator(
                         <Button
                             vertical
                             active={props.navigationState.index === 0}
-                            onPress={() => props.navigation.navigate("Test")}
+                            onPress={() => props.navigation.navigate("UserTasks")}
                         >
                             <Icon name="bowtie" />
                             <Text>Home</Text>
