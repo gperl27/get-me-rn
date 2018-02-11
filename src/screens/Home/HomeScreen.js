@@ -19,11 +19,12 @@ import {
     View,
 } from "native-base";
 
-import TabRouter from '../../TabRouter'
+import TabRouter from './TabRouter';
 
 
 class HomeScreen extends React.Component {
     render() {
+        console.log(this.props.navigation.navigate, 'asdfafsd')
         return (
             <Container>
                 <Header />
@@ -31,7 +32,7 @@ class HomeScreen extends React.Component {
                     direction="up"
                     style={{ zIndex: 99999, backgroundColor: '#5067FF' }}
                     position="bottomRight"
-                    onPress={() => console.log('hit fab')}
+                    onPress={() => this.props.navigation.navigate('CreateTask')}
                 >
                     <Icon name="add" />
                 </Fab>

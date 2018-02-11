@@ -16,13 +16,21 @@ import {
 
 import { Text, View } from 'react-native'
 
+import CreateTaskScreen from '../CreateTask';
+
 const HomeScreenRouter = DrawerNavigator(
   {
     Home: { screen: HomeScreen },
+    CreateTask: {
+      screen: CreateTaskScreen,
+      navigationOptions: {
+        drawerLockMode: 'locked-closed'
+      },
+    }
   },
   {
     contentComponent: props => <Sidebar {...props} />
-  }
+  },
 );
 
 class AuthedRouter extends Component {
@@ -31,7 +39,8 @@ class AuthedRouter extends Component {
 
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        user.getIdToken().then(function (idToken) {
+        user.getIdToken(true).then(function (idToken) {
+          console.log(idToken, 'asdfasd')
           axios.defaults.headers.common['Authorization'] = idToken;
           axios.get(
             'http://d2c234c5.ngrok.io/auth_user', { params: { user } })

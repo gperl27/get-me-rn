@@ -1,11 +1,13 @@
 import React from 'react';
 import axios from 'axios';
-import { Container, Content, Button, Text } from 'native-base'
+import { StyleSheet, Platform, StatusBar } from 'react-native';
+
+import { Container, Content, Button, Text, Header } from 'native-base'
 
 import * as firebase from 'firebase';
 
 import {
-  StackNavigator,
+  StackNavigator
 } from 'react-navigation';
 
 class LoginScreen extends React.Component {
@@ -31,15 +33,21 @@ class LoginScreen extends React.Component {
 
   render() {
     return (
-      <Container>
-        <Content>
-          <Button onPress={() => this.loginWithGoogle()}>
-            <Text>Log In</Text>
+      <Container style={styles.appHeaderFix}>
+        <Content contentContainerStyle={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Button style={{alignSelf: 'center'}} primary onPress={() => this.loginWithGoogle()}>
+            <Text>Sign In With Google</Text>
           </Button>
         </Content>
       </Container>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  appHeaderFix: {
+    paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight
+  }
+});
 
 export default LoginScreen;

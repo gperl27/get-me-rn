@@ -21,6 +21,8 @@ import {
 } from "native-base";
 import { TabNavigator } from "react-navigation";
 
+import UserTasksScreen from './UserTasksScreen';
+
 class HomeScreen extends React.Component {
     render() {
         let items = [];
@@ -63,7 +65,7 @@ class SettingsScreen extends React.Component {
 
 const TabRouter = TabNavigator(
     {
-        Test: { screen: HomeScreen },
+        UserTasksScreen: { screen: UserTasksScreen },
         Settings: { screen: SettingsScreen },
     },
     {
