@@ -18,6 +18,7 @@ import {
     FooterTab,
     List,
     ListItem,
+    Thumbnail,
 } from "native-base";
 import { View } from 'react-native'
 
@@ -31,7 +32,6 @@ class UserTasksScreen extends React.Component {
 
     render() {
         const { tasks, isLoading } = this.props;
-        console.log(tasks,'tasks');
         return (
             isLoading ?
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -41,14 +41,18 @@ class UserTasksScreen extends React.Component {
                 tasks.length > 0 ?
                     <List dataArray={this.props.tasks}
                         renderRow={(task) =>
-                            <ListItem>
-                                <CardItem>
-                                    <Body>
-                                        <Text>
-                                            {task.title}
-                                        </Text>
-                                    </Body>
-                                </CardItem>
+                            <ListItem avatar>
+                                <Left>
+                                    <Thumbnail source={{ uri: 'Image URL' }} />
+                                </Left>
+                                <Body>
+                                    <Text>{task.title}</Text>
+                                    <Text note>Jan 17, 2017</Text>
+                                    <Text note>Johan successfully got this for you.</Text>
+                                </Body>
+                                <Right>
+                                    <Text note>$13.45</Text>
+                                </Right>
                             </ListItem>
                         }>
                     </List>

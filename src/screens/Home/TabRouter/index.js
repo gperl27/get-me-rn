@@ -23,36 +23,6 @@ import { TabNavigator } from "react-navigation";
 
 import UserTasksScreen from './UserTasksScreen';
 
-class HomeScreen extends React.Component {
-    render() {
-        let items = [];
-
-        for (let i = 0; i < 50; i++) {
-            items.push(i);
-        }
-
-        return (
-            <Container>
-                <Content>
-                    <List dataArray={items}
-                        renderRow={(item) =>
-                            <ListItem>
-                                <CardItem>
-                                    <Body>
-                                        <Text>
-                                        //Your text here
-                                        </Text>
-                                    </Body>
-                                </CardItem>
-                            </ListItem>
-                        }>
-                    </List>
-                </Content>
-            </Container>
-        );
-    }
-}
-
 class SettingsScreen extends React.Component {
     render() {
         return (
