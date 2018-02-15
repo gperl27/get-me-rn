@@ -64,9 +64,7 @@ class AuthedRouter extends Component {
     return <LoginScreen />
   }
 
-  render() {
-    return (this.delegateAuthedComponent())
-  }
+  render() { return this.delegateAuthedComponent() }
 }
 
 const mapStateToProps = state => ({

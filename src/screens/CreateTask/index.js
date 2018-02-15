@@ -4,19 +4,30 @@ import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
 import {
     Container, Content, Header, Left, Body, Right, Button, Icon, Title, Text, Form, Item, Input, List,
-    ListItem,
+    ListItem, Card, CardItem, H1, H2, H3,
 } from 'native-base';
 import { StyleSheet, Platform, StatusBar, Modal, View } from 'react-native'
 import { Field, reduxForm } from 'redux-form'
 
 import { Constants, Location, Permissions } from 'expo';
 
+import { Row, Col, Grid } from 'react-native-easy-grid';
+
 import { calculateDistance } from '../../util/geolocation';
 import { submitCreateTask } from '../../modules/tasks'
 
-const CustomInput = ({ input, placeholder, keyboardType }) => {
+const CustomInput = ({
+    styles,
+    input,
+    placeholder,
+    keyboardType,
+    regular
+ }) => {
     return (
-        <Item>
+        <Item
+            regular={regular}
+            style={styles}
+        >
             <Input
                 {...input}
                 placeholder={placeholder}
@@ -112,10 +123,9 @@ class CreateTaskScreen extends React.Component {
                         </Button>
                     </Left>
                     <Body>
-                        <Title>Header</Title>
                     </Body>
                 </Header>
-                <Content>
+                <Content padder>
                     <Modal
                         visible={this.state.modalVisible}
                         animationType={'slide'}
@@ -125,7 +135,7 @@ class CreateTaskScreen extends React.Component {
                             <Header searchBar>
                                 <Item regular>
                                     <Input
-                                        placeholder='What do you need?'
+                                        placeholder='Headphones, tissues, McDonalds...'
                                         onChangeText={(text) => this.search(text)}
                                     />
                                 </Item>
@@ -167,31 +177,63 @@ class CreateTaskScreen extends React.Component {
                             </Content>
                         </Container>
                     </Modal>
-                    <Button onPress={() => this.openModal()}>
-                        <Text>what do you need?</Text>
-                    </Button>
-                    <Form>
+                    <Form style={{ width: '100%' }}>
+                        <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
+                            <H1>$</H1>
+                            <Field
+                                styles={{ width: 100 }}
+                                name='offer'
+                                component={CustomInput}
+                                placeholder="I'll give you"
+                                keyboardType='numeric'
+                            />
+                        </View>
                         <Field
-                            name='title'
-                            component={CustomInput}
-                            placeholder='Title'
-                        />
-                        <Field
+                            styles={{ marginTop: 25, marginBottom: 25 }}
                             name='instructions'
                             component={CustomInput}
-                            placeholder='Instructions'
+                            placeholder='If you get me...'
+                            regular
                         />
-                        <Field
-                            name='offer'
-                            component={CustomInput}
-                            placeholder='Offer'
-                            keyboardType='numeric'
-                        />
+                        <H2 style={{ textAlign: 'center' }}>From</H2>
+                        <View style={{ marginTop: 25, marginBottom: 25 }}>
+                            {
+                                true ?
+                                    <Card onPress={() => this.openModal()}>
+                                        <CardItem header>
+                                            <Left>
+                                                <Body>
+                                                    <Text>Shake Shack</Text>
+                                                    <Text>2838 Timbercreek Circle, Boca Raton FL 33431</Text>
+                                                </Body>
+                                            </Left>
+                                            <Right>
+                                                <Button
+                                                    transparent
+                                                    onPress={() => this.openModal()}
+                                                >
+                                                    <Icon name='create' />
+                                                </Button>
+                                            </Right>
+                                        </CardItem>
+                                    </Card>
+                                    :
+                                    <Button
+                                        onPress={() => this.openModal()}
+                                        block
+                                        light
+                                    >
+                                        <Text>Nearby</Text>
+                                    </Button>
+                            }
+                        </View>
+
                         <Button
-                            transparent
+                            block
+                            primary
                             onPress={this.props.handleSubmit(this.onSubmit)}
                         >
-                            <Text>Submit</Text>
+                            <Text>Get Me</Text>
                         </Button>
                     </Form>
                 </Content>
@@ -202,15 +244,7 @@ class CreateTaskScreen extends React.Component {
 
 const styles = StyleSheet.create({
     appHeaderFix: {
-        paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight
-    },
-    modalContainer: {
-        // flex: 1,
-        // justifyContent: 'center',
-        // backgroundColor: 'grey',
-    },
-    innerContainer: {
-        // alignItems: 'center',
+        paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight,
     },
 });
 
