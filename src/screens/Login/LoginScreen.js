@@ -1,3 +1,4 @@
+import { ANDROID_CLIENT_ID, IOS_CLIENT_ID } from 'react-native-dotenv'
 import React from 'react';
 import axios from 'axios';
 import { StyleSheet, Platform, StatusBar } from 'react-native';
@@ -13,8 +14,8 @@ import {
 class LoginScreen extends React.Component {
   async loginWithGoogle() {
     const { type, idToken } = await Expo.Google.logInAsync({
-      androidClientId: '665105818131-mth049uaf78vdforfma5immdcb174psf.apps.googleusercontent.com',
-      iosClientId: '665105818131-mj94uos302jrhad6udlgk164hbhacjtf.apps.googleusercontent.com',
+      androidClientId: ANDROID_CLIENT_ID,
+      iosClientId: IOS_CLIENT_ID,
       scopes: ['profile', 'email'],
     });
 

@@ -1,3 +1,4 @@
+import { GOOGLE_PLACES_KEY } from 'react-native-dotenv'
 import React from 'react';
 import axios from 'axios';
 import { bindActionCreators, compose } from 'redux'
@@ -39,7 +40,7 @@ class SearchPlaces extends React.Component {
         let location = await Location.getCurrentPositionAsync({});
         this.setState({ location });
 
-        const q = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.coords.latitude},${location.coords.longitude}&radius=500&type=restaurant&&key=AIzaSyDkoK9EBOFnhk8Ny1u8HqsMhDyPCKBYgW4`
+        const q = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.coords.latitude},${location.coords.longitude}&radius=500&type=restaurant&&key=${GOOGLE_PLACES_KEY}`
 
         console.log(q, location);
 

@@ -14,5 +14,8 @@
     "redux": "^3.7.2",
     "redux-form": "^7.2.3",
     "redux-thunk": "^2.2.0"
+  },
+  "devDependencies": {
+    "react-native-dotenv": "^0.1.1"
   }
 }
