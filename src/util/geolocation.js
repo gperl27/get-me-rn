@@ -1,6 +1,5 @@
+// http://www.movable-type.co.uk/scripts/latlong.html
 export const calculateDistance = (lat1, lon1, lat2, lon2) => {
-    console.log(lat1,lat2,lon1, lon2, 'calc distance')
-    // http://www.movable-type.co.uk/scripts/latlong.html
     const R = 6371e3; // earth radius in meters
     const φ1 = lat1 * (Math.PI / 180);
     const φ2 = lat2 * (Math.PI / 180);

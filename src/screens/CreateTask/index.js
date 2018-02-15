@@ -39,6 +39,7 @@ const CustomInput = ({
 
 class CreateTaskScreen extends React.Component {
     state = {
+        locationChoice: null,
         location: null,
         errorMessage: null,
         results: null,
@@ -76,6 +77,11 @@ class CreateTaskScreen extends React.Component {
         // this.setState({ results: results.data.results })
     };
 
+    handleChooseLocation = result => {
+        this.setState({ locationChoice: result })
+        this.closeModal();
+    }
+
     // API Reference: https://developers.google.com/places/web-service/search
     search = async text => {
         const { location } = this.state;
@@ -86,8 +92,6 @@ class CreateTaskScreen extends React.Component {
             const query = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.coords.latitude},${location.coords.longitude}&radius=500&keyword=${text}&key=AIzaSyDkoK9EBOFnhk8Ny1u8HqsMhDyPCKBYgW4`
 
             const results = await axios.get(query)
-
-            console.log(results);
 
             this.setState({ results: results.data.results })
         }
@@ -108,7 +112,7 @@ class CreateTaskScreen extends React.Component {
 
     render() {
         const { navigation } = this.props;
-        const { results, location } = this.state;
+        const { results, location, locationChoice } = this.state;
         // console.log(this.props.results, 'RESUTLS');
         // console.log(this.props);
         return (
@@ -145,7 +149,7 @@ class CreateTaskScreen extends React.Component {
                                     results.length > 0 ?
                                         <List dataArray={results}
                                             renderRow={(result) =>
-                                                <ListItem>
+                                                <ListItem button onPress={() => this.handleChooseLocation(result)}>
                                                     <Body>
                                                         <Text>{result.name}</Text>
                                                         <Text>{result.vicinity}</Text>
@@ -198,13 +202,13 @@ class CreateTaskScreen extends React.Component {
                         <H2 style={{ textAlign: 'center' }}>From</H2>
                         <View style={{ marginTop: 25, marginBottom: 25 }}>
                             {
-                                true ?
+                                locationChoice ?
                                     <Card onPress={() => this.openModal()}>
                                         <CardItem header>
                                             <Left>
                                                 <Body>
-                                                    <Text>Shake Shack</Text>
-                                                    <Text>2838 Timbercreek Circle, Boca Raton FL 33431</Text>
+                                                    <Text>{locationChoice.name || 'Unknown'}</Text>
+                                                    <Text>{locationChoice.vicinity || 'Unknown'}</Text>
                                                 </Body>
                                             </Left>
                                             <Right>
@@ -228,13 +232,17 @@ class CreateTaskScreen extends React.Component {
                             }
                         </View>
 
-                        <Button
-                            block
-                            primary
-                            onPress={this.props.handleSubmit(this.onSubmit)}
-                        >
-                            <Text>Get Me</Text>
-                        </Button>
+                        {
+                            locationChoice ?
+                                <Button
+                                    block
+                                    primary
+                                    onPress={this.props.handleSubmit(this.onSubmit)}
+                                >
+                                    <Text>Get Me</Text>
+                                </Button>
+                                : null
+                        }
                     </Form>
                 </Content>
             </Container>
