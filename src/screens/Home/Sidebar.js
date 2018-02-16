@@ -19,6 +19,10 @@ export default class SideBar extends React.Component {
                 onPress: () =>  this.props.navigation.navigate("Home")
             },
             {
+                text: "Payments",
+                onPress: () =>  this.props.navigation.navigate("Payments")
+            },
+            {
                 text: "Log Out",
                 onPress: () =>  firebase.auth().signOut()
             },

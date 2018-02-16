@@ -1,3 +1,4 @@
+import { GOOGLE_PLACES_KEY } from 'react-native-dotenv'
 import React from 'react';
 import axios from 'axios';
 import { bindActionCreators, compose } from 'redux'
@@ -11,13 +12,13 @@ import { Field, reduxForm } from 'redux-form'
 
 import { Constants, Location, Permissions } from 'expo';
 
-import { Row, Col, Grid } from 'react-native-easy-grid';
-
-import { calculateDistance } from '../../util/geolocation';
 import { submitCreateTask } from '../../modules/tasks'
+
+import PlacesListModal from './PlacesListModal'
 
 const CustomInput = ({
     styles,
+    inputStyles,
     input,
     placeholder,
     keyboardType,
@@ -32,6 +33,7 @@ const CustomInput = ({
                 {...input}
                 placeholder={placeholder}
                 keyboardType={keyboardType || 'default'}
+                style={inputStyles}
             />
         </Item>
     )
@@ -44,6 +46,7 @@ class CreateTaskScreen extends React.Component {
         errorMessage: null,
         results: null,
         modalVisible: false,
+        checkoutModal: false,
     };
 
     componentDidMount() {
@@ -66,15 +69,6 @@ class CreateTaskScreen extends React.Component {
 
         let location = await Location.getCurrentPositionAsync({});
         this.setState({ location });
-
-        // const q = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.coords.latitude},${location.coords.longitude}&radius=500&key=AIzaSyDkoK9EBOFnhk8Ny1u8HqsMhDyPCKBYgW4`
-
-        // console.log(q, location);
-
-        // const results = await axios.get(q)
-
-        // console.log(results.data.results, 'results');
-        // this.setState({ results: results.data.results })
     };
 
     handleChooseLocation = result => {
@@ -86,10 +80,8 @@ class CreateTaskScreen extends React.Component {
     search = async text => {
         const { location } = this.state;
 
-        console.log('searching for: ', text);
-
         if (location) {
-            const query = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.coords.latitude},${location.coords.longitude}&radius=500&keyword=${text}&key=AIzaSyDkoK9EBOFnhk8Ny1u8HqsMhDyPCKBYgW4`
+            const query = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.coords.latitude},${location.coords.longitude}&radius=500&keyword=${text}&key=${GOOGLE_PLACES_KEY}`
 
             const results = await axios.get(query)
 
@@ -98,23 +90,31 @@ class CreateTaskScreen extends React.Component {
     }
 
     onSubmit = values => {
-        this.props.submitCreateTask(values);
+        // this.props.submitCreateTask(values);
+        this.openCheckout()
     }
 
-    openModal() {
+    openModal = () => {
         this.setState({ modalVisible: true });
     }
 
-    closeModal() {
+    closeModal = () => {
         this.setState({ modalVisible: false });
+    }
+
+    openCheckout = () => {
+        this.setState({ checkoutModal: true });
+    }
+
+    closeCheckout = () => {
+        this.setState({ checkoutModal: false });
     }
 
 
     render() {
         const { navigation } = this.props;
-        const { results, location, locationChoice } = this.state;
-        // console.log(this.props.results, 'RESUTLS');
-        // console.log(this.props);
+        const { results, location, locationChoice, modalVisible } = this.state;
+
         return (
             <Container style={styles.appHeaderFix}>
                 <Header>
@@ -131,69 +131,44 @@ class CreateTaskScreen extends React.Component {
                 </Header>
                 <Content padder>
                     <Modal
-                        visible={this.state.modalVisible}
-                        animationType={'slide'}
-                        onRequestClose={() => this.closeModal()}
+                        visible={this.state.checkoutModal}
+                        animationType={'fade'}
+                        onRequestClose={() => this.close()}
                     >
-                        <Container>
-                            <Header searchBar>
-                                <Item regular>
-                                    <Input
-                                        placeholder='Headphones, tissues, McDonalds...'
-                                        onChangeText={(text) => this.search(text)}
-                                    />
-                                </Item>
-                            </Header>
-                            <Content>
-                                {results ?
-                                    results.length > 0 ?
-                                        <List dataArray={results}
-                                            renderRow={(result) =>
-                                                <ListItem button onPress={() => this.handleChooseLocation(result)}>
-                                                    <Body>
-                                                        <Text>{result.name}</Text>
-                                                        <Text>{result.vicinity}</Text>
-                                                        {
-                                                            location ?
-                                                                <Text>
-                                                                    {
-                                                                        calculateDistance(
-                                                                            location.coords.latitude,
-                                                                            location.coords.longitude,
-                                                                            result.geometry.location.lat,
-                                                                            result.geometry.location.lng,
-                                                                        ).toFixed(1)
-                                                                    }
-                                                                    &nbsp;mi
-                                                                </Text> : null
-                                                        }
-                                                    </Body>
-                                                </ListItem>
-                                            }>
-                                        </List> : null
-                                    : null
-                                }
-                                <Button
-                                    onPress={() => this.closeModal()}
-                                    title="Close modal"
-                                >
-                                </Button>
-                            </Content>
-                        </Container>
+                        <View>
+                            <Text>Confirm Stub</Text>
+                            <Button
+                                onPress={() => this.close()}
+                                title="Close modal"
+                            >
+                            </Button>
+                        </View>
                     </Modal>
+
+
+                    <PlacesListModal
+                        results={results}
+                        location={location}
+                        visible={modalVisible}
+                        search={this.search}
+                        handleChooseLocation={this.handleChooseLocation}
+                        closeModal={this.closeModal}
+                    />
                     <Form style={{ width: '100%' }}>
+                        <H2 style={{ textAlign: 'center', marginBottom: 25 }}>I'll give you</H2>
                         <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
                             <H1>$</H1>
                             <Field
                                 styles={{ width: 100 }}
+                                inputStyles={{ fontSize: 24 }}
                                 name='offer'
                                 component={CustomInput}
-                                placeholder="I'll give you"
+                                placeholder="10.00"
                                 keyboardType='numeric'
                             />
                         </View>
                         <Field
-                            styles={{ marginTop: 25, marginBottom: 25 }}
+                            styles={{ marginTop: 25, marginBottom: 25, borderRadius: 8 }}
                             name='instructions'
                             component={CustomInput}
                             placeholder='If you get me...'
@@ -225,9 +200,9 @@ class CreateTaskScreen extends React.Component {
                                     <Button
                                         onPress={() => this.openModal()}
                                         block
-                                        light
+                                        secondary
                                     >
-                                        <Text>Nearby</Text>
+                                        <Text>Search Nearby</Text>
                                     </Button>
                             }
                         </View>

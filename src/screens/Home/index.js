@@ -17,12 +17,19 @@ import {
 import { Text, View } from 'react-native'
 
 import CreateTaskScreen from '../CreateTask';
+import PaymentsScreen from '../Payments';
 
 const HomeScreenRouter = DrawerNavigator(
   {
     Home: { screen: HomeScreen },
     CreateTask: {
       screen: CreateTaskScreen,
+      navigationOptions: {
+        drawerLockMode: 'locked-closed'
+      },
+    },
+    Payments: {
+      screen: PaymentsScreen,
       navigationOptions: {
         drawerLockMode: 'locked-closed'
       },
@@ -38,8 +45,10 @@ class AuthedRouter extends Component {
     const { loggedIn, loggedOut } = this.props;
 
     firebase.auth().onAuthStateChanged((user) => {
+      console.log(user)
       if (user) {
         user.getIdToken(true).then(function (idToken) {
+          console.log(idToken)
           axios.defaults.headers.common['Authorization'] = idToken;
           axios.get(
             'http://d2c234c5.ngrok.io/auth_user', { params: { user } })
